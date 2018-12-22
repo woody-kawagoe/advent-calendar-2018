@@ -1,0 +1,4 @@
+cron:
+- description: "daily summary job"
+  url: /task
+  schedule: every 24 hours
