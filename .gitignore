@@ -2,4 +2,3 @@ __pycache__
 .gcloudignore
 .python-version
 *\.swp
-config.py

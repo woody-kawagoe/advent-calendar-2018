@@ -3,24 +3,27 @@ from google.cloud import datastore
 
 client = datastore.Client()
 
-class QiitaModel():
+class EventModel():
     @staticmethod
     def get(limit=100):
-        q = client.query(kind='Qiita')
+        q = client.query(kind='Event')
         return q.fetch(limit=limit)
 
     @staticmethod
     def get_dict(limit=100):
-        return [_entity_to_dict(e) for e in QiitaModel.get(limit)]
+        return [_entity_to_dict(e) for e in EventModel.get(limit)]
 
     @staticmethod
     def put(dict_list):
         entities = []
         for d in dict_list:
-            entity = datastore.Entity(key=client.key('Qiita', d['id']))
+            entity = datastore.Entity(key=client.key('Event', d['url']))
             entity.update({
-                'title': d['title'],
-                'user_id': d['user']['id'],
+                'name': d['name'],
+                'organizer': d['organizer'],
+                'description': d['description'],
+                'location': d['location']['name'],
+                'date': d['startDate'],
                 'url': d['url']
             })
             entities.append(entity)
@@ -28,8 +31,8 @@ class QiitaModel():
 
     @staticmethod
     def delete():
-        q = client.query(kind='Qiita')
-        client.delete_multi(q.keys_only())
+        q = client.query(kind='Qiita').keys_only()
+        client.delete_multi(q)
 
 
 def _entity_to_dict(entity):
